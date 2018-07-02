@@ -46,7 +46,7 @@ export default class Buttons extends React.Component {
           <Button shape="circle" loading={this.state.loading}></Button>
           <Button type="primary" onClick={this.handleCloseLoading}>关闭</Button>
         </Card>
-        <Card title="按钮组">
+        <Card title="按钮组" style={{marginBottom:10}}>
           <Button.Group>
             <Button type="primary" icon="left" >返回</Button>
             <Button type="primary">前进<Icon type="right" /></Button>
