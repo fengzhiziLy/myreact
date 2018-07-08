@@ -1,10 +1,37 @@
 import JsonP from 'jsonp'
 import axios from 'axios'
+import Utils from '../utils/utils'
 import {
   Modal
 } from 'antd'
 
 export default class Axios {
+
+  static requestList (_this, url, params, isMock) {
+    var data = {
+      params: params,
+      isMock: isMock
+    }
+    this.ajax({
+      url,
+      data
+    }).then((data) => {
+      if (data && data.result) {
+        let list = data.result.item_list.map((item, index) => {
+          item.key = index
+          return item
+        })
+        _this.setState({
+          list,
+          pagination: Utils.pagination(data, (current) => {
+            _this.params.page = current
+            _this.requestList()
+          })
+        })
+      } 
+    })
+  }
+
   static jsonp(options) {
     return new Promise((resolve, reject) => {
       JsonP(options.url, {
@@ -25,7 +52,13 @@ export default class Axios {
       loading = document.getElementById('ajaxLoading');
       loading.style.display = 'block';
     }
-    let baseApi = 'https://www.easy-mock.com/mock/5a7278e28d0c633b9c4adbd7/api';
+    let baseApi = ''
+    if (options.isMock) {
+      baseApi = 'https://www.easy-mock.com/mock/5a7278e28d0c633b9c4adbd7/api'
+    } else {
+      baseApi = 'https://www.easy-mock.com/mock/5a7278e28d0c633b9c4adbd7/api'
+    }
+    
     return new Promise((resolve, reject) => {
       axios({
         url: options.url,
